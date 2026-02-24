@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rakku Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+background:linear-gradient(160deg,#0f172a,#0b1120,#111827);
+color:#e5e7eb;
+overflow-x:hidden;
+}
+
+/* Bubble */
+.bubble{
+position:fixed;
+bottom:-150px;
+background:rgba(255,255,255,0.05);
+border-radius:50%;
+animation:rise linear infinite;
+z-index:0;
+}
+@keyframes rise{
+0%{transform:translateY(0);}
+100%{transform:translateY(-120vh);}
+}
+
+/* Loading */
+#loading{
+position:fixed;
+width:100%;
+height:100%;
+background:#0b1120;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+.loading-text{
+font-size:20px;
+letter-spacing:4px;
+color:#9ca3af;
+position:relative;
+}
+.loading-text::after{
+content:'';
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:linear-gradient(120deg,transparent,white,transparent);
+animation:shine 2s infinite;
+}
+@keyframes shine{100%{left:120%;}}
+
+/* Sidebar */
+.menu-btn{
+position:fixed;
+top:20px;
+left:20px;
+background:#1f2937;
+border:none;
+color:#e5e7eb;
+padding:10px 14px;
+border-radius:10px;
+cursor:pointer;
+z-index:1001;
+}
+
+.overlay{
+position:fixed;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+z-index:998;
+}
+.overlay.active{
+opacity:1;
+pointer-events:auto;
+}
+
+.sidebar{
+position:fixed;
+top:0;
+left:-260px;
+width:240px;
+height:100%;
+background:#111827;
+padding-top:80px;
+transition:0.4s;
+z-index:999;
+box-shadow:5px 0 40px rgba(0,0,0,0.5);
+}
+.sidebar.active{left:0;}
+
+.sidebar button{
+display:flex;
+align-items:center;
+gap:12px;
+width:85%;
+margin:12px auto;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#1f2937;
+color:#d1d5db;
+cursor:pointer;
+transition:0.3s;
+font-size:14px;
+}
+.sidebar button:hover{background:#374151;}
+
+/* Section */
+.section{
+min-height:100vh;
+display:none;
+padding:100px 20px;
+text-align:center;
+position:relative;
+z-index:1;
+}
+.active{display:block;}
+
+/* ===== Tilt Image Card ===== */
+.image-card{
+  max-width:800px;
+  margin:40px auto;
+  padding:8px;
+  border-radius:24px;
+  background:#1f2937;
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+  transform:rotate(-4deg);
+  transition:0.5s ease;
+  position:relative;
+  overflow:hidden;
+}
+.image-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg, rgba(255,255,255,0.06) 0%, transparent 40%);
+  pointer-events:none;
+}
+.image-card:hover{
+  transform:rotate(0deg) scale(1.03);
+}
+.image-card img{
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:18px;
+}
+
+/* ===== Card Default ===== */
+.card{
+  background:#1f2937;
+  padding:20px;
+  border-radius:16px;
+  margin:20px auto;
+  max-width:700px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* ===== Feature Box (Per Fitur) ===== */
+.feature-box{
+  background: rgba(20,20,25,0.7);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 20px;
+  margin-top:25px; /* jarak antar fitur */
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  transition:0.3s;
+}
+.feature-box:hover{
+  transform: scale(1.01);
+}
+
+/* ===== Inputs & Buttons dalam Feature Box ===== */
+.feature-box input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:#111827;
+  color:white;
+  margin-bottom:10px;
+  outline:none;
+  transition:0.3s;
+}
+.feature-box input:focus{
+  border-color:#374151;
+}
+
+.feature-box button.action{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background: rgba(55,65,81,0.9);
+  color:white;
+  cursor:pointer;
+  margin-top:8px;
+  transition:0.3s;
+}
+.feature-box button.action:hover{
+  background: rgba(75,85,99,0.9);
+  transform:translateY(-2px);
+}
+
+/* ===== Result / Output ===== */
+.result{
+  margin-top:10px;
+  word-break:break-word;
+}
+
+/* Anime */
+.anime-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+margin-top:20px;
+}
+.anime-card{
+background:#111827;
+border-radius:12px;
+padding:10px;
+cursor:pointer;
+}
+.anime-card img{
+width:100%;
+height:200px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#1f2937;
+padding:20px;
+border-radius:15px;
+max-width:400px;
+display:none;
+z-index:1002;
+}
+.popup.active{display:block;}
+
+footer{text-align:center;padding:20px;opacity:0.5;}
+</style>
+</head>
+<body>
+
+<div id="loading"><div class="loading-text">RAKKU LOADING</div></div>
+
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="sidebar" id="sidebar">
+<button onclick="show('home')">🏠 Beranda</button>
+<button onclick="show('download')">⬇ Downloader</button>
+<button onclick="show('anime')">🎌 Anime</button>
+<button onclick="show('community')">👥 Komunitas</button>
+<button onclick="show('developer')">👤 Profile Developer</button>
+<button onclick="show('stats')">📊 Statistik</button>
+<button onclick="show('report')">📩 Lapor Owner</button>
+</div>
+
+<!-- HOME -->
+<section id="home" class="section active">
+<h1>Platfrom Downloader</h1>
+<div class="image-card">
+<img src="https://raw.githubusercontent.com/bagus-api/storage/master/0T0jr.jpeg">
+</div>
+<div class="card">
+G tau laper laper puasa gini malah iseng bikin website download.
+</div>
+</section>
+
+<!-- DOWNLOAD -->
+<section id="download" class="section">
+  <div class="image-card">
+    <img src="https://raw.githubusercontent.com/bagus-api/storage/master/Z6KdN.jpeg" alt="Download Preview">
+  </div>
+
+  <div class="card feature-layer">
+    <h3 style="margin-bottom:12px;">📥 Downloader Platform</h3>
+    <p style="font-size:14px;opacity:0.8;margin-bottom:10px;">
+      Pilih platform di bawah untuk mulai mengunduh konten secara cepat & mudah.
+    </p>
+  
+  <!-- ===== Flux AI Generator ===== -->
+<div class="feature-box">
+  <h3>🤖 Flux AI Generator</h3>
+  <input id="fluxPrompt" placeholder="Masukkan prompt/gambaran...">
+
+  <label for="fluxRatio" style="font-size:13px;opacity:0.7;">Rasio:</label>
+  <select id="fluxRatio" style="width:100%;padding:8px;border-radius:8px;background:#111827;color:white;margin-bottom:10px;">
+    <option value="1:1">1:1</option>
+    <option value="16:9">16:9</option>
+    <option value="9:16">9:16</option>
+  </select>
+
+  <button class="action" onclick="generateFlux()">Generate</button>
+
+  <div id="fluxLoading" style="display:none;color:#9ca3af;margin-top:10px;">🔄 Sedang memproses...</div>
+  <div id="fluxResult" class="result" style="margin-top:10px;"></div>
+</div>
+  <!-- ===== IQC Chat Maker ===== -->
+<div class="feature-box">
+  <h3>🔮 IQC Chat Maker</h3>
+  <input id="iqcText" placeholder="Masukkan teks IQC...">
+  <button class="action" onclick="generateIQC()">Buat IQC</button>
+  <div id="iqcResult" class="result"></div>
+</div>
+<!-- ===== Instagram Downloader ===== -->
+<div class="feature-box">
+  <h3>📸 Instagram Downloader</h3>
+  <input id="igLink" placeholder="URL Instagram">
+  <button class="action" onclick="downloadIG()">Download</button>
+  <div id="igResult" class="result"></div>
+</div>
+
+<!-- ===== TikTok Downloader ===== -->
+<div class="feature-box">
+  <h3>🎬 TikTok Downloader</h3>
+  <input id="ttLink" placeholder="URL TikTok">
+  <button class="action" onclick="downloadTT()">Download Video</button>
+  <button class="action" onclick="downloadMP3()">Download Audio</button>
+  <div id="ttResult" class="result"></div>
+</div>
+
+<!-- ===== TikTok Search ===== -->
+<div class="feature-box">
+  <h3>🔎 TikTok Search</h3>
+  <input id="ttSearchInput" placeholder="Cari video TikTok...">
+  <button class="action" onclick="searchTT()">Cari</button>
+  <div id="ttSearchResult" class="result"></div>
+</div>
+
+<!-- ===== YouTube MP4 Downloader ===== -->
+<div class="feature-box">
+  <h3>🎬 YouTube MP4 Downloader</h3>
+  <input id="ytmp4Url" placeholder="Masukkan link YouTube...">
+  <button class="action" onclick="downloadYTMP4()">Download Video</button>
+
+  <div id="ytmp4Loading" style="display:none;color:#9ca3af;margin-top:10px;">
+    🔄 Sedang memproses...
+  </div>
+
+  <div id="ytmp4Result" style="display:none;margin-top:15px;">
+    
+    <div class="image-card">
+      <img id="ytmp4Thumb" src="" alt="Thumbnail">
+    </div>
+
+    <div class="card" style="text-align:left;">
+      <div id="ytmp4Info" style="margin-bottom:10px;"></div>
+      <a id="ytmp4Download" href="#" target="_blank" class="action">
+        ⬇ Download MP4
+      </a>
+    </div>
+
+  </div>
+</div>
+<!-- ===== YouTube MP3 (HF API) ===== -->
+<div class="feature-box">
+  <h3>🎵 YouTube MP3 Downloader</h3>
+  <input id="ytmp3Url2" placeholder="Masukkan link YouTube...">
+  <button class="action" onclick="downloadYTMP3v3()">Download Audio</button>
+
+  <div id="ytmp3Loading2" style="display:none;color:#9ca3af;margin-top:10px;">
+    🔄 Sedang memproses...
+  </div>
+
+  <div id="ytmp3Result2" style="display:none;margin-top:15px;">
+    <div class="image-card">
+      <img id="ytmp3Thumb2" src="" alt="Thumbnail">
+    </div>
+
+    <div class="card" style="text-align:left;">
+      <div id="ytmp3Info2" style="margin-bottom:10px;"></div>
+      <button class="action" id="ytmp3DownloadBtn2">
+        ⬇ Download MP3
+      </button>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ANIME -->
+<section id="anime" class="section">
+<div class="feature-box">
+  <h3>🎌 Anime</h3>
+  
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+    <button class="action" onclick="topAnime()">🔥 Top Anime</button>
+    <button class="action" onclick="ongoingAnime()">📺 Ongoing</button>
+  </div>
+
+  <input id="animeSearch" placeholder="Cari anime...">
+  <button class="action" onclick="searchAnime()">🔎 Cari</button>
+
+  <div id="animeResult" class="anime-grid" style="margin-top:15px;"></div>
+</div>
+
+<div id="popup" class="popup"></div>
+
+
+</section>
+
+<div id="popup" class="popup"></div>
+
+<!-- COMMUNITY -->
+<section id="community" class="section" style="padding:40px 20px;">
+  <!-- Card Community -->
+  <div class="image-card" style="
+    position:relative;
+    max-width:800px;
+    margin:0 auto;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,0.6);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor:pointer;
+  " onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 25px 60px rgba(0,0,0,0.7)'" 
+     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 20px 50px rgba(0,0,0,0.6)'">
+    <img src="https://raw.githubusercontent.com/bagus-api/storage/master/Yuqwu.jpeg" style="width:100%;aspect-ratio:16/9;object-fit:cover;">
+    <span style="
+      position:absolute;
+      bottom:12px;
+      right:12px;
+      background:rgba(0,0,0,0.7);
+      color:#fff;
+      padding:6px 14px;
+      border-radius:14px;
+      font-size:13px;
+      font-weight:600;
+      letter-spacing:0.5px;
+      text-shadow:0 1px 3px rgba(0,0,0,0.6);
+    ">Komunitas</span>
+  </div>
+
+  <!-- Detail Bawah Card -->
+  <div style="
+    max-width:800px;
+    margin:20px auto 0;
+    background:rgba(31,41,55,0.95);
+    padding:24px;
+    border-radius:18px;
+    box-shadow:0 12px 35px rgba(0,0,0,0.5);
+    color:#e5e7eb;
+    font-size:15px;
+    line-height:1.7;
+    transition: all 0.4s ease;
+  ">
+    <h3 style="margin-bottom:12px; font-weight:700; text-shadow:0 1px 2px rgba(0,0,0,0.5);">Komunitas Sistem Bot WhatsApp</h3>
+    <p style="margin-bottom:10px;">Gunakan fitur² lengkap berbasis internet:</p>
+    <ul style="margin-left:22px; list-style-type:disc; gap:4px;">
+      <li>Downloader menu</li>
+      <li>AI menu</li>
+      <li>Edit menu</li>
+      <li>Search menu</li>
+      <li>Tools menu</li>
+      <li>Audio menu</li>
+      <li>IQC</li>
+      <li>Tofigure</li>
+      <li>Dll 800+ fitur berfungsi</li>
+    </ul>
+
+    <div style="display:flex;flex-direction:column;gap:16px;margin-top:18px;">
+  <button style="
+    display:flex;align-items:center;gap:12px;
+    border:1px solid rgba(255,255,255,0.2);
+    box-shadow:0 5px 18px rgba(0,0,0,0.3);
+    background:linear-gradient(145deg,#2c2f38,#1f2937);
+    color:#f1f5f9;
+    font-weight:700;
+    font-size:15px;
+    padding:14px 22px;
+    border-radius:14px;
+    text-shadow:0 1px 2px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+    cursor:pointer;
+  " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 22px rgba(0,0,0,0.35)'" 
+     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 18px rgba(0,0,0,0.3)'" 
+     onclick="window.open('https://chat.whatsapp.com/J67LyC2S4aYHzUKaVLvNYC?mode=gi_t')">
+    <span style="background:rgba(255,255,255,0.15);padding:6px 12px;border-radius:12px;">👥</span> Gabung Group
+  </button>
+
+  <button style="
+    display:flex;align-items:center;gap:12px;
+    border:1px solid rgba(255,255,255,0.2);
+    box-shadow:0 5px 18px rgba(0,0,0,0.3);
+    background:linear-gradient(145deg,#2c2f38,#1f2937);
+    color:#f1f5f9;
+    font-weight:700;
+    font-size:15px;
+    padding:14px 22px;
+    border-radius:14px;
+    text-shadow:0 1px 2px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+    cursor:pointer;
+  " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 22px rgba(0,0,0,0.35)'" 
+     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 18px rgba(0,0,0,0.3)'" 
+     onclick="window.open('https://whatsapp.com/channel/0029Vb6NSxr002T2ttqzk20R')">
+    <span style="background:rgba(255,255,255,0.15);padding:6px 12px;border-radius:12px;">📢</span> Channel Rakku
+  </button>
+</div>
+  </div>
+</section>
+
+<!-- PROFILE DEVELOPER -->
+<section id="developer" class="section" style="padding:40px 20px;">
+  <!-- Card Profile Developer -->
+  <div class="image-card" style="
+    position:relative;
+    max-width:800px;
+    margin:0 auto;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,0.6);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor:pointer;
+  " onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 25px 60px rgba(0,0,0,0.7)'" 
+     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 20px 50px rgba(0,0,0,0.6)'">
+    <img src="https://raw.githubusercontent.com/bagus-api/storage/master/DBIal.jpeg" style="width:100%;aspect-ratio:16/9;object-fit:cover;">
+    <span style="
+      position:absolute;
+      bottom:12px;
+      right:12px;
+      background:rgba(0,0,0,0.7);
+      color:#fff;
+      padding:6px 14px;
+      border-radius:14px;
+      font-size:13px;
+      font-weight:600;
+      letter-spacing:0.5px;
+      text-shadow:0 1px 3px rgba(0,0,0,0.6);
+    ">Developer</span>
+  </div>
+
+  <!-- Detail Bawah Card -->
+  <div style="
+    max-width:800px;
+    margin:20px auto 0;
+    background:rgba(31,41,55,0.95);
+    padding:24px;
+    border-radius:18px;
+    box-shadow:0 12px 35px rgba(0,0,0,0.5);
+    color:#e5e7eb;
+    font-size:15px;
+    line-height:1.7;
+    transition: all 0.4s ease;
+  ">
+    <h3 style="margin-bottom:12px; font-weight:700; text-shadow:0 1px 2px rgba(0,0,0,0.5);">Rakku Developer</h3>
+
+    <div style="display:flex;flex-direction:column;gap:16px;margin-top:12px;">
+      <button style="
+        display:flex;align-items:center;gap:12px;
+        border:1px solid rgba(255,255,255,0.2);
+        box-shadow:0 5px 18px rgba(0,0,0,0.3);
+        background:linear-gradient(145deg,#2c2f38,#1f2937);
+        color:#f1f5f9;
+        font-weight:700;
+        font-size:15px;
+        padding:14px 22px;
+        border-radius:14px;
+        text-shadow:0 1px 2px rgba(0,0,0,0.5);
+        transition: all 0.3s ease;
+        cursor:pointer;
+      " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 22px rgba(0,0,0,0.35)'" 
+         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 18px rgba(0,0,0,0.3)'" 
+         onclick="window.open('https://instagram.com/kyourakku_')">
+        <span style="background:rgba(255,255,255,0.15);padding:6px 12px;border-radius:12px;">📸</span> Instagram @kyourakku_
+      </button>
+
+      <button style="
+        display:flex;align-items:center;gap:12px;
+        border:1px solid rgba(255,255,255,0.2);
+        box-shadow:0 5px 18px rgba(0,0,0,0.3);
+        background:linear-gradient(145deg,#2c2f38,#1f2937);
+        color:#f1f5f9;
+        font-weight:700;
+        font-size:15px;
+        padding:14px 22px;
+        border-radius:14px;
+        text-shadow:0 1px 2px rgba(0,0,0,0.5);
+        transition: all 0.3s ease;
+        cursor:pointer;
+      " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 22px rgba(0,0,0,0.35)'" 
+         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 18px rgba(0,0,0,0.3)'" 
+         onclick="window.open('https://tiktok.com/@kyourakku_')">
+        <span style="background:rgba(255,255,255,0.15);padding:6px 12px;border-radius:12px;">🎵</span> TikTok @kyourakku_
+      </button>
+
+      <button style="
+        display:flex;align-items:center;gap:12px;
+        border:1px solid rgba(255,255,255,0.2);
+        box-shadow:0 5px 18px rgba(0,0,0,0.3);
+        background:linear-gradient(145deg,#2c2f38,#1f2937);
+        color:#f1f5f9;
+        font-weight:700;
+        font-size:15px;
+        padding:14px 22px;
+        border-radius:14px;
+        text-shadow:0 1px 2px rgba(0,0,0,0.5);
+        transition: all 0.3s ease;
+        cursor:pointer;
+      " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 22px rgba(0,0,0,0.35)'" 
+         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 18px rgba(0,0,0,0.3)'" 
+         onclick="window.open('https://wa.me/6283830130235')">
+        <span style="background:rgba(255,255,255,0.15);padding:6px 12px;border-radius:12px;">💬</span> WhatsApp Number
+      </button>
+
+      <button style="
+        display:flex;align-items:center;gap:12px;
+        border:1px solid rgba(255,255,255,0.2);
+        box-shadow:0 5px 18px rgba(0,0,0,0.3);
+        background:linear-gradient(145deg,#2c2f38,#1f2937);
+        color:#f1f5f9;
+        font-weight:700;
+        font-size:15px;
+        padding:14px 22px;
+        border-radius:14px;
+        text-shadow:0 1px 2px rgba(0,0,0,0.5);
+        transition: all 0.3s ease;
+        cursor:pointer;
+      " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 22px rgba(0,0,0,0.35)'" 
+         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 18px rgba(0,0,0,0.3)'" 
+         onclick="window.open('https://whatsapp.com/channel/0029Vb6NSxr002T2ttqzk20R')">
+        <span style="background:rgba(255,255,255,0.15);padding:6px 12px;border-radius:12px;">📡</span> Saluran WA
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats" class="section">
+<div class="card">
+<h3>Total Download</h3>
+<p id="counter">0</p>
+</div>
+</section>
+
+<!-- REPORT -->
+<section id="report" class="section">
+<div class="card">
+<button class="action" onclick="window.open('https://wa.me/6283830130235')">Hubungi Owner</button>
+</div>
+</section>
+
+<footer>Created by Rakku</footer>
+
+<script>
+let total=localStorage.getItem("rakkuDownload")||0;
+document.getElementById("counter").innerText=total;
+
+function addCount(){
+total++;
+localStorage.setItem("rakkuDownload",total);
+document.getElementById("counter").innerText=total;
+}
+
+function toggleMenu(){
+sidebar.classList.toggle("active");
+overlay.classList.toggle("active");
+}
+
+function show(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+toggleMenu();
+}
+async function generateFlux() {
+  const prompt = document.getElementById("fluxPrompt").value.trim()
+  const ratio = document.getElementById("fluxRatio").value
+  const loading = document.getElementById("fluxLoading")
+  const result = document.getElementById("fluxResult")
+
+  if (!prompt) return alert("Masukkan prompt dulu!")
+
+  loading.style.display = "block"
+  result.innerHTML = ""
+
+  try {
+    const res = await fetch(
+      `https://rynekoo-api.hf.space/image.gen/flux/dev?prompt=${encodeURIComponent(prompt)}&ratio=${encodeURIComponent(ratio)}`
+    )
+
+    const json = await res.json()
+
+    if (!json.success) throw new Error("Gagal generate gambar")
+
+    result.innerHTML = `
+      <img src="${json.result}" 
+           style="width:100%;border-radius:15px;margin-bottom:10px;">
+
+      <a href="${json.result}" target="_blank" class="btn">
+        ⬇ Download Image
+      </a>
+    `
+
+  } catch (err) {
+    alert("❌ Gagal generate gambar")
+    console.error(err)
+  }
+
+  loading.style.display = "none"
+}
+
+async function generateIQC(){
+  const text = document.getElementById('iqcText').value.trim();
+  const result = document.getElementById('iqcResult');
+  if(!text){
+    alert('Masukkan teks terlebih dahulu!');
+    return;
+  }
+
+  const timeNow = new Date().toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Jakarta'});
+
+  const url = 'https://anabot.my.id/api/maker/iqc?' +
+              `text=${encodeURIComponent(text)}` +
+              `&chatTime=${timeNow}` +
+              `&statusBarTime=${timeNow}` +
+              '&bubbleColor=%23272a2f' +
+              '&menuColor=%23272a2f' +
+              '&textColor=%23FFFFFF' +
+              '&fontName=Arial' +
+              '&signalName=Telkomsel' +
+              '&apikey=freeApikey';
+
+  result.innerHTML = `<p style="color:#9ca3af;">Sedang memuat IQC...</p>`;
+
+  try{
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.width = '100%';
+    img.style.borderRadius = '12px';
+    img.style.marginTop = '10px';
+    
+    // Tombol download
+    const btn = document.createElement('button');
+    btn.innerText = '⬇ Unduh IQC';
+    btn.className = 'action';
+    btn.style.marginTop = '12px';
+    btn.onclick = ()=>autoDownload(url,'iqc-chat');
+
+    result.innerHTML = '';
+    result.appendChild(img);
+    result.appendChild(btn);
+
+  }catch(e){
+    console.error(e);
+    result.innerHTML = `<p style="color:#f87171;">Gagal membuat IQC</p>`;
+  }
+}
+
+// Fungsi download
+async function autoDownload(url, filename="rakku-iqc"){
+  try{
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(blobUrl);
+  }catch{
+    alert("Gagal mengunduh file!");
+  }
+}
+
+async function downloadIG(){
+  const url = document.getElementById("igLink").value;
+  const result = document.getElementById("igResult");
+
+  if(!url) return alert("Masukkan URL Instagram!");
+  if(!/instagram\.com/i.test(url)) return alert("URL bukan Instagram!");
+
+  result.innerHTML = "⏳ Sedang mengunduh...";
+
+  try{
+    const res = await fetch(
+      "https://api.deline.web.id/downloader/ig?url=" + encodeURIComponent(url)
+    );
+    const data = await res.json();
+
+    if(!data.status) {
+      result.innerHTML = "❌ Gagal mengambil data";
+      return;
+    }
+
+    const media = data.result.media;
+
+    if((!media.images || !media.images.length) &&
+       (!media.videos || !media.videos.length)){
+      result.innerHTML = "❌ Media tidak ditemukan";
+      return;
+    }
+
+    result.innerHTML = "";
+
+    /* ================= VIDEO ================= */
+    /* ================= VIDEO ================= */
+if(media.videos && media.videos.length){
+  result.innerHTML = `
+    <video controls style="width:100%;border-radius:12px;margin-top:10px;">
+      <source src="${media.videos[0]}" type="video/mp4">
+    </video>
+    <br><br>
+    <a href="${media.videos[0]}" download>
+      <button class="action">⬇ Unduh Video</button>
+    </a>
+  `;
+  addCount();
+  return;
+}
+
+    /* ================= IMAGE ================= */
+    if(media.images && media.images.length){
+  media.images.forEach((img,i)=>{
+    result.innerHTML += `
+      <img src="${img}" style="width:100%;border-radius:12px;margin-top:10px;">
+      <br>
+      <a href="${img}" download>
+        <button class="action">⬇ Unduh Gambar ${i+1}</button>
+      </a>
+      <br><br>
+    `;
+  });
+  addCount();
+}
+
+  }catch(e){
+    result.innerHTML = "❌ Gagal menghubungi server";
+  }
+}
+
+async function downloadTT(){
+  let url = document.getElementById("ttLink").value;
+  let result = document.getElementById("ttResult");
+
+  if(!url) return alert("Masukkan URL TikTok!");
+  if(!/tiktok\.com/i.test(url)) return alert("URL bukan TikTok!");
+
+  result.innerHTML = "🕜 Mengunduh konten TikTok...";
+
+  try{
+    let r = await fetch("https://www.tikwm.com/api/?url=" + encodeURIComponent(url) + "&hd=1");
+    let api = await r.json();
+
+    if(!api || api.code !== 0){
+      result.innerHTML = "❌ Gagal mengambil data TikTok";
+      return;
+    }
+
+    let data = api.data;
+
+    let caption = `
+      <div style="margin-bottom:10px;text-align:left;">
+      <b>Author:</b> ${data.author?.nickname || "-"}<br>
+      ❤️ ${data.digg_count || 0} |
+      💬 ${data.comment_count || 0} |
+      🔄 ${data.share_count || 0}
+      </div>
+    `;
+
+    result.innerHTML = caption;
+
+    /* ================= FOTO / ALBUM ================= */
+    if(Array.isArray(data.images) && data.images.length > 0){
+
+      data.images.forEach((img,i)=>{
+        result.innerHTML += `
+          <img src="${img}" style="width:100%;border-radius:12px;margin-top:10px;">
+          <br>
+          <a href="${img}" download>
+            <button class="action">⬇ Unduh Foto ${i+1}</button>
+          </a>
+          <br><br>
+        `;
+      });
+
+      addCount();
+      return;
+    }
+
+    /* ================= VIDEO ================= */
+    if(!data.play){
+      result.innerHTML += "❌ Video tidak tersedia";
+      return;
+    }
+
+    result.innerHTML += `
+      <video controls style="width:100%;border-radius:12px;margin-top:10px;">
+        <source src="${data.play}" type="video/mp4">
+      </video>
+      <br><br>
+      <a href="${data.play}" download>
+        <button class="action">⬇ Unduh Video</button>
+      </a>
+      <br><br>
+      <button class="action" onclick="downloadMP3()">🔄 Unduh Audio</button>
+    `;
+
+    addCount();
+
+  }catch(e){
+    result.innerHTML = "❌ Gagal menghubungi server TikTok";
+  }
+}
+
+async function downloadMP3(){
+  let url = document.getElementById("ttLink").value;
+  let result = document.getElementById("ttResult");
+
+  if(!url) return alert("Masukkan URL TikTok!");
+
+  result.innerHTML = "Mengambil audio...";
+
+  try{
+    let r = await fetch("https://www.tikwm.com/api/?url=" + encodeURIComponent(url) + "&hd=1");
+    let api = await r.json();
+
+    if(!api || api.code !== 0){
+      result.innerHTML = "❌ Audio tidak tersedia";
+      return;
+    }
+
+    let music = api.data.music;
+
+    result.innerHTML = `
+      <audio controls style="width:100%;margin-top:10px;">
+        <source src="${music}" type="audio/mp3">
+      </audio>
+      <br><br>
+      <a href="${music}" download>
+        <button class="action">⬇ Unduh MP3</button>
+      </a>
+    `;
+
+    addCount();
+
+  }catch{
+    result.innerHTML = "❌ Gagal mengambil audio";
+  }
+}
+async function searchTT(){
+  let query = document.getElementById("ttSearchInput").value;
+  let result = document.getElementById("ttSearchResult");
+
+  if(!query) return alert("Masukkan kata kunci pencarian!");
+
+  result.innerHTML = "🔎 Mencari video TikTok...";
+
+  try{
+    let formData = new URLSearchParams();
+    formData.append("keywords", query);
+    formData.append("count", 12);
+    formData.append("cursor", 0);
+    formData.append("web", 1);
+    formData.append("hd", 1);
+
+    let res = await fetch("https://tikwm.com/api/feed/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+      },
+      body: formData
+    });
+
+    let data = await res.json();
+    let videos = data?.data?.videos;
+
+    if(!videos || !videos.length){
+      result.innerHTML = "❌ Tidak ada video ditemukan!";
+      return;
+    }
+
+    let pick = videos[Math.floor(Math.random() * videos.length)];
+
+    let playUrl = "https://tikwm.com" + pick.play;
+    let coverUrl = "https://tikwm.com" + pick.cover;
+    let musicUrl = "https://tikwm.com" + pick.music;
+
+    result.innerHTML = `
+      <div style="text-align:left;margin-bottom:10px;">
+        <b>ID:</b> ${pick.video_id}<br>
+        <b>Region:</b> ${pick.region}<br>
+        <b>Caption:</b> ${pick.title || "-"}<br>
+        <b>Author:</b> ${pick.author.unique_id}<br>
+        <b>Nickname:</b> ${pick.author.nickname}
+      </div>
+
+      <video controls style="width:100%;border-radius:12px;">
+        <source src="${playUrl}" type="video/mp4">
+      </video>
+
+      <br><br>
+
+      <a href="${playUrl}" download>
+        <button class="action">⬇ Unduh Video</button>
+      </a>
+
+      <button class="action" onclick="window.open('${musicUrl}')">
+        🎵 Unduh Audio
+      </button>
+    `;
+
+    addCount();
+
+  }catch(e){
+    result.innerHTML = "❌ Gagal mengambil data (kemungkinan CORS)";
+  }
+}
+async function autoDownload(url, filename="rakku-file"){
+  try{
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(blobUrl);
+  }catch{
+    alert("Gagal mengunduh file!");
+  }
+}
+
+async function downloadYTMP4(){
+const url=document.getElementById("ytmp4Url").value;
+if(!url) return alert("Masukkan link YouTube dulu!");
+const loading=document.getElementById("ytmp4Loading");
+const result=document.getElementById("ytmp4Result");
+loading.style.display="block";result.style.display="none";
+try{
+const res=await fetch("https://rynekoo-api.hf.space/downloader/youtube/v5?url="+encodeURIComponent(url));
+const data=await res.json();
+if(!data.success) throw "error";
+const info=data.result;
+const thumb=info.thumbnail?.slice(-1)[0]?.url;
+const video=info.formats?.find(v=>v.qualityLabel && v.url);
+document.getElementById("ytmp4Thumb").src=thumb;
+document.getElementById("ytmp4Info").innerHTML="<b>"+info.title+"</b><br>"+info.channelTitle;
+document.getElementById("ytmp4Download").href=video.url;
+loading.style.display="none";result.style.display="block";
+}catch{
+loading.style.display="none";
+alert("Gagal download video");
+}
+}
+
+async function downloadYTMP3v3(){
+  const url=document.getElementById("ytmp3Url2").value;
+  if(!url) return alert("Masukkan link YouTube dulu!");
+
+  const loading=document.getElementById("ytmp3Loading2");
+  const result=document.getElementById("ytmp3Result2");
+  const downloadBtn=document.getElementById("ytmp3DownloadBtn2");
+
+  loading.style.display="block";
+  result.style.display="none";
+
+  try{
+    const res=await fetch("https://rynekoo-api.hf.space/downloader/youtube/v5?url="+encodeURIComponent(url));
+    const data=await res.json();
+    if(!data.success) throw "error";
+
+    const info=data.result;
+    const thumb=info.thumbnail?.slice(-1)[0]?.url;
+
+    // Cari format audio
+    const audio=info.formats?.find(f =>
+      f.mimeType && f.mimeType.includes("audio") && f.url
+    );
+
+    document.getElementById("ytmp3Thumb2").src=thumb || "";
+    document.getElementById("ytmp3Info2").innerHTML="<b>"+info.title+"</b><br>"+info.channelTitle;
+
+    // Klik tombol langsung unduh dengan nama file = judul + .mp3
+    downloadBtn.onclick = () => autoDownload(audio?.url, info.title + ".mp3");
+
+    loading.style.display="none";
+    result.style.display="block";
+
+  }catch{
+    loading.style.display="none";
+    alert("❌ Gagal download audio");
+  }
+}
+
+// Fungsi helper auto download
+async function autoDownload(url, filename="rakku-file.mp3"){
+  try{
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename; // <-- nama file sesuai judul
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(blobUrl);
+  }catch{
+    alert("❌ Gagal mengunduh file!");
+  }
+}
+// ===== Render Anime Cards =====
+function renderAnime(list){
+  animeResult.innerHTML = "";
+  if(!list || !list.length){
+    animeResult.innerHTML = "<p>Tidak ada anime ditemukan.</p>";
+    return;
+  }
+
+  list.forEach(a => {
+    const safeTitle = (a.title || "-").replace(/'/g, "\\'").replace(/"/g, '\\"');
+    const safeSynopsis = (a.synopsis || "Deskripsi tidak tersedia").replace(/'/g, "\\'").replace(/"/g, '\\"');
+    const imgUrl = a.images?.jpg?.image_url || '';
+    const score = a.score || "-";
+
+    animeResult.innerHTML += `
+      <div class="anime-card" onclick="showDetail('${safeTitle}','${safeSynopsis}','${imgUrl}','${score}')">
+        <img src="${imgUrl}" alt="${safeTitle}">
+        <p>${safeTitle}</p>
+      </div>
+    `;
+  });
+}
+
+// ===== Popup Detail Anime =====
+function showDetail(title,synopsis,img,score){
+  popup.innerHTML = `
+    <h3>${title}</h3>
+    <img src="${img}" style="width:100%;border-radius:10px;margin:10px 0;">
+    <p><b>Rating:</b> ${score}</p>
+    <p>${synopsis}</p>
+    <button class="action" onclick="popup.classList.remove('active')">Tutup</button>
+  `;
+  popup.classList.add("active");
+}
+
+// ===== Top Anime =====
+async function topAnime(){
+  animeResult.innerHTML = "<p>Loading Top Anime...</p>";
+  try {
+    let res = await fetch("https://api.jikan.moe/v4/top/anime?limit=8");
+    let data = await res.json();
+    if(data.data) renderAnime(data.data);
+    else animeResult.innerHTML = "<p>Tidak ada Top Anime.</p>";
+  } catch(e) {
+    console.error(e);
+    animeResult.innerHTML = "<p>Gagal memuat Top Anime.</p>";
+  }
+}
+
+// ===== Ongoing Anime =====
+async function ongoingAnime(){
+  animeResult.innerHTML = "<p>Loading Ongoing Anime...</p>";
+  try {
+    let res = await fetch("https://api.jikan.moe/v4/seasons/now");
+    let data = await res.json();
+    if(data.data) renderAnime(data.data.slice(0,8));
+    else animeResult.innerHTML = "<p>Tidak ada Anime Ongoing.</p>";
+  } catch(e) {
+    console.error(e);
+    animeResult.innerHTML = "<p>Gagal memuat Anime Ongoing.</p>";
+  }
+}
+
+// ===== Search Anime =====
+async function searchAnime(){
+  let q = animeSearch.value.trim();
+  if(!q) return alert("Masukkan kata kunci untuk mencari anime!");
+  animeResult.innerHTML = "<p>Loading...</p>";
+  try {
+    let res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}&limit=8`);
+    let data = await res.json();
+    if(data.data && data.data.length) renderAnime(data.data);
+    else animeResult.innerHTML = "<p>Tidak ada hasil ditemukan.</p>";
+  } catch(e) {
+    console.error(e);
+    animeResult.innerHTML = "<p>Gagal mencari anime.</p>";
+  }
+}
+
+setTimeout(()=>loading.style.display="none",2000);
+
+for(let i=0;i<20;i++){
+let bubble=document.createElement('div');
+bubble.classList.add('bubble');
+bubble.style.width=Math.random()*60+20+'px';
+bubble.style.height=bubble.style.width;
+bubble.style.left=Math.random()*100+'%';
+bubble.style.animationDuration=(Math.random()*15+10)+'s';
+document.body.appendChild(bubble);
+}
+</script>
+
+</body>
+</html>
