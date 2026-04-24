@@ -1,0 +1,336 @@
+<!DOCTYPE html><html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>rakku- suka sawit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{
+scroll-behavior:smooth;
+overflow-x:hidden; /* TAMBAH DI SINI */
+}
+body{
+font-family:'Inter',sans-serif;
+background:#05060b;
+color:#e6e8ee;
+overflow-x:hidden; /* PASTIIN ADA */
+}
+
+/* SCROLL EFFECT */
+section{opacity:0;transform:translateY(40px);transition:all .8s ease}
+section.show{opacity:1;transform:translateY(0)}
+/* CARD ANIMATION (slide dari samping) */
+.card{
+opacity:0;
+transform:translateY(30px); /* bukan dari samping biar aman */
+transition:opacity .5s ease, transform .5s ease;
+}
+
+.card.show{
+opacity:1;
+transform:translateY(0);
+}
+
+/* LOADER UI PREMIUM */
+#loader{
+position:fixed;inset:0;background:#05060b;
+display:flex;align-items:center;justify-content:center;
+z-index:9999;flex-direction:column;
+}
+.loader-wrap{
+position:relative;width:90px;height:90px
+}
+.loader-ring{
+position:absolute;inset:0;border-radius:50%;
+border:2px solid rgba(255,255,255,.08);
+}
+.loader-glow{
+position:absolute;inset:0;border-radius:50%;
+border:2px solid transparent;
+border-top:2px solid #3b82f6;
+animation:spin 1.2s linear infinite;
+box-shadow:0 0 50px rgba(59,130,246,.6)
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{margin-top:20px;font-size:13px;opacity:.6;letter-spacing:1px}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:0 20px;
+overflow:hidden; /* TAMBAH */
+}
+.section{padding:100px 0}
+.title{font-family:'Space Grotesk';font-size:32px;margin-bottom:20px}
+.muted{opacity:.7;line-height:1.7}
+
+/* NAV */
+.nav{position:fixed;top:0;width:100%;z-index:999;background:rgba(10,10,25,.6);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.05)}
+.nav-inner{display:flex;justify-content:space-between;align-items:center;padding:18px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:600}
+.logo img{width:20px;height:20px;border-radius:50%;box-shadow:0 0 12px rgba(59,130,246,.7)}
+.nav a{color:#aaa;text-decoration:none;margin-left:20px;font-size:14px}
+.nav a:hover{color:#fff}
+
+/* HERO */
+.hero{text-align:center;padding-top:150px;padding-bottom:120px}
+.avatar{width:130px;height:130px;border-radius:50%;object-fit:cover;border:3px solid #3b82f6;box-shadow:0 0 70px rgba(59,130,246,.6);animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.hero h1{font-size:56px;margin-top:20px;display:flex;justify-content:center;gap:10px;align-items:center}
+.hero h1 img{width:28px;height:28px;border-radius:50%;box-shadow:0 0 16px rgba(59,130,246,.9)}
+.tagline{opacity:.7;margin-top:10px}
+.handle{opacity:.5;font-size:14px}
+
+/* CARD */
+.card{
+max-width:100%;
+background:linear-gradient(180deg,rgba(25,28,50,.7),rgba(10,12,25,.7));border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:22px;backdrop-filter:blur(16px);transition:.3s}
+.card:hover{transform:translateY(-10px) scale(1.01);border-color:#3b82f6;box-shadow:0 20px 70px rgba(59,130,246,.25)}
+
+.grid{
+display:grid;
+gap:24px;
+width:100%; /* TAMBAH */
+}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+
+/* SKILL */
+.skill{margin-bottom:16px}
+.bar{height:8px;background:#111;border-radius:10px;overflow:hidden;margin-top:6px}
+.fill{height:100%;background:linear-gradient(90deg,#3b82f6,#22d3ee)}
+
+/* PROJECT */
+.project-icon{
+width:42px;height:42px;border-radius:12px;
+display:flex;align-items:center;justify-content:center;
+background:rgba(59,130,246,.15);
+box-shadow:0 0 20px rgba(59,130,246,.4);
+margin-bottom:10px;font-size:18px
+}
+.project-title{font-size:18px;font-weight:600}
+.project-desc{font-size:14px;opacity:.75;margin-top:8px;line-height:1.6}
+
+/* SOCIAL UPGRADE */
+.social-card{
+display:flex;
+flex-direction:column;
+gap:14px;
+position:relative;
+overflow:hidden;
+}
+
+.social-card::before{
+content:'';
+position:absolute;
+inset:0;
+background:radial-gradient(circle at top right,rgba(59,130,246,.25),transparent 60%);
+opacity:.4;
+pointer-events:none; /* 🔥 TAMBAH INI */
+}
+.social-card{
+position:relative;
+z-index:1;
+}
+
+.social-btn{
+position:relative;
+z-index:2;
+}
+
+.social-head{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.social-icon{
+width:44px;
+height:44px;
+border-radius:14px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+background:linear-gradient(135deg,#1d233f,#0f1225);
+box-shadow:0 0 25px rgba(59,130,246,.4);
+transition:.3s;
+}
+
+.social-card:hover .social-icon{
+transform:scale(1.1);
+box-shadow:0 0 40px rgba(59,130,246,.8);
+}
+
+.social-badge{
+font-size:11px;
+padding:4px 8px;
+border-radius:8px;
+background:rgba(59,130,246,.15);
+color:#60a5fa;
+margin-left:auto;
+}
+
+.social-desc{
+font-size:13px;
+opacity:.65;
+line-height:1.5;
+}
+
+.social-btn{
+padding:13px 16px;
+border-radius:12px;
+background:linear-gradient(135deg,#11142b,#0c0f22);
+color:#60a5fa;
+font-size:13px;
+border:1px solid rgba(255,255,255,.05);
+cursor:pointer;
+transition:.3s;
+text-align:center;
+}
+
+.social-btn:hover{
+transform:translateY(-4px);
+box-shadow:0 15px 50px rgba(59,130,246,.35);
+}
+
+footer{text-align:center;padding:50px 0;opacity:.5}
+img{
+max-width:100%;
+height:auto;
+}
+</style></head>
+<body><!-- LOADER --><div id="loader">
+  <div class="loader-wrap">
+    <div class="loader-ring"></div>
+    <div class="loader-glow"></div>
+  </div>
+  <div class="loader-text">Initializing rakku portfolio...</div>
+</div><!-- NAV --><div class="nav">
+  <div class="nav-inner container">
+    <div class="logo">rakku <img src="https://raw.githubusercontent.com/bagus-api/storage/master/emaeA.jpeg"></div>
+    <div>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#social">Social</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</div><!-- HERO --><section class="hero container">
+  <img class="avatar" src="https://raw.githubusercontent.com/rakku-dev/rakkustorage/main/image/waiter-6xx7.jpeg">
+  <h1>rakku <img src="https://raw.githubusercontent.com/bagus-api/storage/master/emaeA.jpeg"></h1>
+  <div class="handle">@kyourakku_</div>
+  <p class="tagline">Developer & Automation Enthusiast — Building powerful systems, fixing chaos, and creating smooth digital experiences.</p>
+</section><!-- ABOUT --><section id="about" class="section container">
+  <div class="title">About Me</div>
+  <p class="muted">Seorang developer yang fokus pada automation dan pengembangan sistem modern berbasis JavaScript. Mengutamakan performa, stabilitas, dan user experience dalam setiap project.</p>  <div class="grid grid-2" style="margin-top:40px">
+    <div class="card">
+      <div class="title" style="font-size:18px">Skills</div>
+      <div class="skill">JavaScript<div class="bar"><div class="fill" style="width:95%"></div></div></div>
+      <div class="skill">Node.js<div class="bar"><div class="fill" style="width:92%"></div></div></div>
+      <div class="skill">React<div class="bar"><div class="fill" style="width:90%"></div></div></div>
+      <div class="skill">Baileys<div class="bar"><div class="fill" style="width:96%"></div></div></div>
+      <div class="skill">MongoDB<div class="bar"><div class="fill" style="width:85%"></div></div></div>
+    </div><div class="card">
+  <div class="title" style="font-size:18px">Status</div>
+  <p class="muted">🟢 Open for project<br>⚡ Fast response<br>🔥 High quality build<br>📈 Focus on performance</p>
+</div>
+
+  </div>
+</section><!-- PROJECT --><section id="projects" class="section container">
+  <div class="title">Projects</div>
+  <div class="grid grid-3"><div class="card">
+  <div class="project-icon">🤖</div>
+  <div class="project-title">WhatsApp Bot System</div>
+  <div class="project-desc">Bot WhatsApp kompleks dengan ratusan fitur: downloader, AI chat, auto admin, hingga sistem modular yang scalable dan stabil untuk ribuan user.</div>
+</div>
+
+<div class="card">
+  <div class="project-icon">⚡</div>
+  <div class="project-title">Auto Reply Engine</div>
+  <div class="project-desc">Sistem balasan otomatis berbasis keyword & schedule yang mampu meningkatkan efisiensi komunikasi bisnis secara signifikan.</div>
+</div>
+
+<div class="card">
+  <div class="project-icon">🛒</div>
+  <div class="project-title">Modern Web Store</div>
+  <div class="project-desc">Website e-commerce lengkap dengan payment gateway, dashboard admin, serta optimasi performa untuk pengalaman belanja terbaik.</div>
+</div>
+
+<div class="card">
+  <div class="project-icon">🐞</div>
+  <div class="project-title">JavaScript Debugging</div>
+  <div class="project-desc">Layanan debugging dan refactor kode JavaScript untuk meningkatkan performa, stabilitas, dan maintainability aplikasi.</div>
+</div>
+
+<div class="card">
+  <div class="project-icon">☕</div>
+  <div class="project-title">Creative Experiments</div>
+  <div class="project-desc">Eksperimen random, ide liar, dan eksplorasi konsep baru dalam dunia development yang sering menghasilkan inovasi unik.</div>
+</div>
+
+<div class="card">
+  <div class="project-icon">💙</div>
+  <div class="project-title">Personal Focus Project</div>
+  <div class="project-desc">Proyek personal yang menjadi sumber motivasi dan inspirasi dalam setiap proses development.</div>
+</div>
+
+  </div>
+</section><!-- SOCIAL --><section id="social" class="section container">
+  <div class="title">Social & Contact Detail</div>
+  <div class="grid grid-2"><div class="card social-card">
+  <h3>WhatsApp</h3>
+  <p class="muted">+62 838-3013-0235</p>
+  <a href="https://wa.me/6283830130235" class="social-btn">Hubungi via WhatsApp</a>
+</div>
+
+<div class="card social-card">
+  <h3>Instagram</h3>
+  <p class="muted">@kyourakku</p>
+  <a href="https://instagram.com/kyourakku" class="social-btn">Lihat Profil Instagram</a>
+</div>
+
+<div class="card social-card">
+  <h3>TikTok</h3>
+  <p class="muted">@kyourakku_</p>
+  <a href="https://tiktok.com/@kyourakku_" class="social-btn">Explore TikTok</a>
+</div>
+
+<div class="card social-card">
+  <h3>WhatsApp Channel</h3>
+  <p class="muted">Update terbaru & konten eksklusif</p>
+  <a href="https://whatsapp.com/channel/0029Vb6NSxr002T2ttqzk20R" class="social-btn">Gabung Channel</a>
+</div>
+
+  </div>
+</section><!-- CONTACT --><section id="contact" class="section container">
+  <div class="title">Let's Work Together</div>
+  <p class="muted">Butuh bot, website, atau fix code? Hubungi sekarang untuk diskusi lebih lanjut.</p>
+  <div style="margin-top:20px">
+    <a href="https://wa.me/6283830130235" class="social-btn">Mulai Chat Sekarang</a>
+  </div>
+
+</div>
+</section><footer>© 2026 rakku — All Rights Reserved</footer><script>
+window.onload = () => {
+ setTimeout(()=>{
+  document.getElementById('loader').style.display='none'
+ },900)
+}
+
+const observer = new IntersectionObserver((entries, obs)=>{
+ entries.forEach(entry=>{
+  if(entry.isIntersecting){
+    entry.target.classList.add('show')
+
+    // 🔥 penting: stop observe biar gak reset
+    obs.unobserve(entry.target)
+  }
+ })
+},{threshold:0.15})
+
+document.querySelectorAll('section, .card').forEach(el=>{
+ observer.observe(el)
+})
+</script></body>
+</html>
