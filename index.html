@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang=\"id\">
+<head>
+<meta charset=\"UTF-8\" />
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
+<title>rakku — Portfolio</title>
+<meta name=\"description\" content=\"Portfolio rakku (@kyourakku_) — Developer & Automation Enthusiast. WhatsApp Bot, Pesan Otomatis, Website Store, Fix JavaScript.\" />
+<link rel=\"icon\" href=\"https://raw.githubusercontent.com/rakku-dev/rakkustorage/main/image/waiter-6xx7.jpeg\" />
+
+<!-- Tailwind CDN -->
+<script src=\"https://cdn.tailwindcss.com\"></script>
+<!-- Fonts -->
+<link href=\"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap\" rel=\"stylesheet\" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          display: ['\"Space Grotesk\"', 'sans-serif'],
+          mono: ['\"JetBrains Mono\"', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  :root {
+    color-scheme: dark;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #07070c;
+    color: #e6e8ee;
+    -webkit-font-smoothing: antialiased;
+  }
+  .App {
+    min-height: 100vh;
+    position: relative;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,0.12), transparent 60%),
+      radial-gradient(900px 500px at 100% 10%, rgba(34,211,238,0.08), transparent 60%),
+      #07070c;
+  }
+  .section-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .section-container { padding: 0 2rem; } }
+
+  /* Grain overlay */
+  .grain::before {
+    content: \"\"; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.035;
+    background-image: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' /><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\");
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #0b0b12; }
+  ::-webkit-scrollbar-thumb { background: #1f2335; border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2a3150; }
+  ::selection { background: #3b82f6; color: white; }
+
+  .font-display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .glass {
+    background: linear-gradient(180deg, rgba(22,25,40,0.7), rgba(13,15,25,0.7));
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .glass-strong {
+    background: linear-gradient(180deg, rgba(28,32,52,0.85), rgba(14,16,28,0.85));
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .text-gradient { background: linear-gradient(180deg,#fff,#a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .text-gradient-blue { background: linear-gradient(90deg,#60a5fa,#22d3ee); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .anim-float { animation: floaty 6s ease-in-out infinite; }
+  @keyframes glow {
+    0%,100% { box-shadow: 0 0 40px rgba(59,130,246,.25), 0 0 80px rgba(59,130,246,.12); }
+    50% { box-shadow: 0 0 60px rgba(59,130,246,.45), 0 0 120px rgba(59,130,246,.2); }
+  }
+  .anim-glow { animation: glow 4s ease-in-out infinite; }
+  @keyframes fade-up { from { opacity:0; transform: translateY(20px);} to { opacity:1; transform: translateY(0);} }
+  .anim-fade-up { animation: fade-up .7s ease forwards; }
+  @keyframes bounce-soft { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(4px);} }
+  .anim-bounce-soft { animation: bounce-soft 1.8s ease-in-out infinite; }
+  @keyframes pulse-dot { 0%,100% { opacity: 1;} 50% { opacity: .4;} }
+  .anim-pulse-dot { animation: pulse-dot 1.8s ease-in-out infinite; }
+
+  /* Card hover */
+  .project-card { transition: transform .3s ease; position: relative; overflow: hidden; }
+  .project-card:hover { transform: translateY(-4px); }
+  .project-card .accent-glow { opacity: 0; transition: opacity .5s ease; }
+  .project-card:hover .accent-glow { opacity: 1; }
+  .project-card .arrow-ico { transition: transform .3s ease, color .3s ease; }
+  .project-card:hover .arrow-ico { transform: translate(2px,-2px); color: #93c5fd; }
+
+  /* Modal */
+  .modal-backdrop { background: rgba(0,0,0,.7); backdrop-filter: blur(8px); }
+  .modal-panel { animation: fade-up .25s ease both; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 20px; right: 20px; z-index: 100;
+    background: #0f1422; color: #e2e8f0; border: 1px solid rgba(255,255,255,.08);
+    padding: .75rem 1rem; border-radius: .6rem; font-size: .875rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    opacity: 0; transform: translateY(10px); transition: all .25s ease;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Input styles */
+  .inp {
+    width: 100%; background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+    color:#fff; border-radius:.6rem; padding:.7rem .9rem; font-size:.9rem;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .inp::placeholder { color:#64748b; }
+  .inp:focus { outline: none; border-color:#3b82f6; background: rgba(59,130,246,.05); }
+
+  /* Nav link underline */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content:\"\"; position:absolute; left:0; bottom:-4px; width:0; height:1px;
+    background:#60a5fa; transition: width .3s ease;
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  /* Verified badge gradient id must be unique within SVG usage; duplicating is OK here */
+  .vb-svg { vertical-align: middle; display: inline-block; }
+
+  .line-clamp-3 {
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+</style>
+</head>
+
+<body>
+<div class=\"App grain\">
+
+  <!-- ============= NAVBAR ============= -->
+  <header id=\"navbar\" class=\"fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-transparent\">
+    <div class=\"section-container flex items-center justify-between h-16\">
+      <a href=\"#top\" class=\"flex items-center gap-1.5 group\">
+        <span class=\"font-display text-xl font-semibold tracking-tight text-white group-hover:text-blue-300 transition-colors\">
+          rakku<span class=\"inline-flex align-middle ml-1 -translate-y-0.5\">
+            <!-- Verified badge -->
+            <svg class=\"vb-svg\" viewBox=\"0 0 22 22\" width=\"16\" height=\"16\" xmlns=\"http://www.w3.org/2000/svg\">
+              <defs><linearGradient id=\"vb1\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#1D9BF0\"/><stop offset=\"100%\" stop-color=\"#2563EB\"/></linearGradient></defs>
+              <path fill=\"url(#vb1)\" d=\"M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44C12.275 1.816 11.647 1.62 11 1.6c-.646.017-1.274.213-1.815.566s-.972.854-1.246 1.44c-.608-.223-1.264-.27-1.898-.14-.633.13-1.216.437-1.687.882-.445.47-.749 1.053-.88 1.687-.13.633-.084 1.29.138 1.897-.587.274-1.086.705-1.44 1.246-.353.54-.55 1.17-.567 1.816.018.647.214 1.276.567 1.817.354.54.853.972 1.44 1.245-.223.608-.27 1.264-.138 1.898.131.634.435 1.218.88 1.687.47.445 1.054.75 1.687.882.634.13 1.29.083 1.898-.14.273.587.704 1.086 1.246 1.44.54.353 1.17.549 1.815.566.647-.017 1.275-.213 1.816-.567.541-.353.972-.852 1.245-1.439.608.223 1.264.27 1.898.14.634-.132 1.217-.437 1.687-.882.445-.47.75-1.053.882-1.687.13-.634.083-1.29-.14-1.898.587-.273 1.086-.704 1.44-1.245.354-.54.55-1.17.567-1.817zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z\"/>
+            </svg>
+          </span>
+        </span>
+      </a>
+
+      <nav class=\"hidden md:flex items-center gap-8\">
+        <a href=\"#about\" class=\"nav-link text-sm text-slate-300 hover:text-white transition-colors\">Tentang</a>
+        <a href=\"#projects\" class=\"nav-link text-sm text-slate-300 hover:text-white transition-colors\">Proyek</a>
+        <a href=\"#contact\" class=\"nav-link text-sm text-slate-300 hover:text-white transition-colors\">Kontak</a>
+        <a href=\"#contact\" class=\"bg-blue-600 hover:bg-blue-500 text-white h-9 px-4 rounded-full text-sm inline-flex items-center transition-colors\">Hubungi</a>
+      </nav>
+
+      <button id=\"menuBtn\" class=\"md:hidden text-white p-2\" aria-label=\"Menu\">
+        <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"/><line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"/><line x1=\"3\" y1=\"18\" x2=\"21\" y2=\"18\"/></svg>
+      </button>
+    </div>
+
+    <div id=\"mobileMenu\" class=\"hidden md:hidden border-t border-white/5 bg-[#07070c]/95 backdrop-blur-xl\">
+      <div class=\"section-container py-4 flex flex-col gap-2\">
+        <a href=\"#about\" class=\"py-2 text-slate-200 hover:text-blue-300\">Tentang</a>
+        <a href=\"#projects\" class=\"py-2 text-slate-200 hover:text-blue-300\">Proyek</a>
+        <a href=\"#contact\" class=\"py-2 text-slate-200 hover:text-blue-300\">Kontak</a>
+        <a href=\"#contact\" class=\"mt-2 bg-blue-600 hover:bg-blue-500 rounded-full py-2 text-center text-white\">Hubungi</a>
+      </div>
+    </div>
+  </header>
+
+  <main class=\"relative z-10\">
+
+    <!-- ============= HERO ============= -->
+    <section id=\"top\" class=\"relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden\">
+      <div class=\"absolute top-10 -left-32 w-[420px] h-[420px] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none\"></div>
+      <div class=\"absolute -top-10 right-0 w-[380px] h-[380px] rounded-full bg-cyan-500/10 blur-[120px] pointer-events-none\"></div>
+
+      <div class=\"section-container relative\">
+        <div class=\"grid md:grid-cols-2 gap-12 items-center\">
+          <div class=\"anim-fade-up\">
+            <div class=\"inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs text-slate-300 mb-6\">
+              <svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#60a5fa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3z\"/></svg>
+              <span class=\"mono\">Tersedia untuk proyek baru</span>
+            </div>
+
+            <h1 class=\"font-display text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.02] text-gradient\">
+              Halo, gue<br />
+              <span class=\"inline-flex items-center gap-2 whitespace-nowrap\">
+                <span>rakku</span>
+                <svg class=\"vb-svg translate-y-1 md:translate-y-1.5\" viewBox=\"0 0 22 22\" width=\"36\" height=\"36\" xmlns=\"http://www.w3.org/2000/svg\">
+                  <defs><linearGradient id=\"vb2\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#1D9BF0\"/><stop offset=\"100%\" stop-color=\"#2563EB\"/></linearGradient></defs>
+                  <path fill=\"url(#vb2)\" d=\"M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44C12.275 1.816 11.647 1.62 11 1.6c-.646.017-1.274.213-1.815.566s-.972.854-1.246 1.44c-.608-.223-1.264-.27-1.898-.14-.633.13-1.216.437-1.687.882-.445.47-.749 1.053-.88 1.687-.13.633-.084 1.29.138 1.897-.587.274-1.086.705-1.44 1.246-.353.54-.55 1.17-.567 1.816.018.647.214 1.276.567 1.817.354.54.853.972 1.44 1.245-.223.608-.27 1.264-.138 1.898.131.634.435 1.218.88 1.687.47.445 1.054.75 1.687.882.634.13 1.29.083 1.898-.14.273.587.704 1.086 1.246 1.44.54.353 1.17.549 1.815.566.647-.017 1.275-.213 1.816-.567.541-.353.972-.852 1.245-1.439.608.223 1.264.27 1.898.14.634-.132 1.217-.437 1.687-.882.445-.47.75-1.053.882-1.687.13-.634.083-1.29-.14-1.898.587-.273 1.086-.704 1.44-1.245.354-.54.55-1.17.567-1.817zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z\"/>
+                </svg>
+              </span>
+            </h1>
+
+            <p class=\"mt-4 text-slate-400 mono text-sm\">@kyourakku_</p>
+
+            <p class=\"mt-6 text-slate-300 text-base md:text-lg max-w-xl leading-relaxed\">
+              Developer &amp; Automation Enthusiast — ngoding sambil ngopi, debug sambil ngmong sendiri.
+            </p>
+
+            <div class=\"mt-8 flex flex-wrap gap-3\">
+              <a href=\"#projects\" class=\"bg-blue-600 hover:bg-blue-500 text-white border-0 h-11 px-6 rounded-full inline-flex items-center transition-colors\">Lihat Proyek</a>
+              <a href=\"#contact\" class=\"bg-transparent hover:bg-white/5 border border-white/15 text-white h-11 px-6 rounded-full inline-flex items-center transition-colors\">Hubungi Gue</a>
+            </div>
+
+            <div class=\"mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-xl\">
+              <div class=\"glass rounded-xl p-4\"><div class=\"font-display text-2xl font-semibold text-white\">40+</div><div class=\"text-[11px] uppercase tracking-wider text-slate-400 mt-1\">Proyek Selesai</div></div>
+              <div class=\"glass rounded-xl p-4\"><div class=\"font-display text-2xl font-semibold text-white\">25+</div><div class=\"text-[11px] uppercase tracking-wider text-slate-400 mt-1\">Klien Happy</div></div>
+              <div class=\"glass rounded-xl p-4\"><div class=\"font-display text-2xl font-semibold text-white\">150K+</div><div class=\"text-[11px] uppercase tracking-wider text-slate-400 mt-1\">Baris Kode</div></div>
+              <div class=\"glass rounded-xl p-4\"><div class=\"font-display text-2xl font-semibold text-white\">∞</div><div class=\"text-[11px] uppercase tracking-wider text-slate-400 mt-1\">Jam Begadang</div></div>
+            </div>
+          </div>
+
+          <div class=\"flex justify-center md:justify-end\">
+            <div class=\"relative anim-float\">
+              <div class=\"absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-indigo-600 blur-2xl opacity-40\"></div>
+              <div class=\"relative w-64 h-64 md:w-80 md:h-80 rounded-full p-[3px] bg-gradient-to-br from-blue-500 via-cyan-400 to-indigo-500 anim-glow\">
+                <div class=\"w-full h-full rounded-full overflow-hidden bg-[#0b0b14]\">
+                  <img src=\"https://raw.githubusercontent.com/rakku-dev/rakkustorage/main/image/waiter-6xx7.jpeg\" alt=\"rakku\" class=\"w-full h-full object-cover\" />
+                </div>
+              </div>
+              <div class=\"absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-[#0b0b14] rounded-full p-1.5 border border-white/10\">
+                <svg class=\"vb-svg\" viewBox=\"0 0 22 22\" width=\"34\" height=\"34\" xmlns=\"http://www.w3.org/2000/svg\">
+                  <defs><linearGradient id=\"vb3\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#1D9BF0\"/><stop offset=\"100%\" stop-color=\"#2563EB\"/></linearGradient></defs>
+                  <path fill=\"url(#vb3)\" d=\"M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44C12.275 1.816 11.647 1.62 11 1.6c-.646.017-1.274.213-1.815.566s-.972.854-1.246 1.44c-.608-.223-1.264-.27-1.898-.14-.633.13-1.216.437-1.687.882-.445.47-.749 1.053-.88 1.687-.13.633-.084 1.29.138 1.897-.587.274-1.086.705-1.44 1.246-.353.54-.55 1.17-.567 1.816.018.647.214 1.276.567 1.817.354.54.853.972 1.44 1.245-.223.608-.27 1.264-.138 1.898.131.634.435 1.218.88 1.687.47.445 1.054.75 1.687.882.634.13 1.29.083 1.898-.14.273.587.704 1.086 1.246 1.44.54.353 1.17.549 1.815.566.647-.017 1.275-.213 1.816-.567.541-.353.972-.852 1.245-1.439.608.223 1.264.27 1.898.14.634-.132 1.217-.437 1.687-.882.445-.47.75-1.053.882-1.687.13-.634.083-1.29-.14-1.898.587-.273 1.086-.704 1.44-1.245.354-.54.55-1.17.567-1.817zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z\"/>
+                </svg>
+              </div>
+              <div class=\"absolute -bottom-4 left-1/2 -translate-x-1/2 glass-strong px-4 py-2 rounded-full text-xs mono text-slate-200 whitespace-nowrap\">@kyourakku_</div>
+            </div>
+          </div>
+        </div>
+
+        <div class=\"mt-20 flex justify-center\">
+          <a href=\"#about\" class=\"flex flex-col items-center gap-2 text-slate-500 hover:text-slate-200 transition-colors\">
+            <span class=\"text-xs uppercase tracking-[0.3em]\">scroll</span>
+            <svg class=\"anim-bounce-soft\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><polyline points=\"19 12 12 19 5 12\"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= ABOUT ============= -->
+    <section id=\"about\" class=\"relative py-20 md:py-28\">
+      <div class=\"section-container\">
+        <div class=\"grid md:grid-cols-12 gap-10\">
+          <div class=\"md:col-span-5\">
+            <div class=\"text-xs uppercase tracking-[0.3em] text-blue-400 mono mb-4\">// Tentang</div>
+            <h2 class=\"font-display text-4xl md:text-5xl font-semibold text-white leading-tight\">
+              Bangun hal bermanfaat,<br />
+              <span class=\"text-gradient-blue\">satu proyek tiap kali.</span>
+            </h2>
+            <p class=\"mt-6 text-slate-300 leading-relaxed\">
+              Halo, gue rakku. Sehari-hari gue bikin bot WhatsApp, bangun website store, benerin kode JavaScript yang bikin orang lain nangis, dan kadang-kadang cuma duduk mikirin hal-hal random — termasuk wowo yang imut itu. Gue percaya teknologi itu harus bantu manusia, bukan nyusahin. Makanya setiap proyek gue kerjain dengan rasa dan logika, biar hasilnya bukan cuma jalan, tapi juga enak dipakai.
+            </p>
+          </div>
+
+          <div class=\"md:col-span-7\">
+            <div class=\"glass rounded-2xl p-6 md:p-8\">
+              <h3 class=\"font-display text-xl text-white mb-6\">Skill &amp; Stack Favorit</h3>
+              <div class=\"space-y-5\" id=\"skillsBars\"></div>
+            </div>
+            <div class=\"grid grid-cols-2 gap-4 mt-5\">
+              <div class=\"glass rounded-xl p-5\"><div class=\"text-xs uppercase tracking-wider text-slate-400\">Fokus</div><div class=\"mt-2 text-white font-medium\">Automation &amp; Web Dev</div></div>
+              <div class=\"glass rounded-xl p-5\"><div class=\"text-xs uppercase tracking-wider text-slate-400\">Status</div><div class=\"mt-2 text-white font-medium flex items-center gap-2\"><span class=\"w-2 h-2 rounded-full bg-emerald-400 anim-pulse-dot\"></span>Open untuk proyek</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= PROJECTS ============= -->
+    <section id=\"projects\" class=\"relative py-20 md:py-28\">
+      <div class=\"section-container\">
+        <div class=\"flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12\">
+          <div>
+            <div class=\"text-xs uppercase tracking-[0.3em] text-blue-400 mono mb-4\">// Proyek Pilihan</div>
+            <h2 class=\"font-display text-4xl md:text-5xl font-semibold text-white leading-tight\">Hal-hal yang pernah gue <span class=\"text-gradient-blue\">bangun</span>.</h2>
+          </div>
+          <p class=\"text-slate-400 max-w-md\">Dari automation yang jalan 24/7 sampai proyek random tengah malem — semuanya punya cerita.</p>
+        </div>
+
+        <div id=\"projectGrid\" class=\"grid md:grid-cols-2 lg:grid-cols-3 gap-5\"></div>
+
+        <!-- Testimonials -->
+        <div class=\"mt-20\">
+          <div class=\"text-xs uppercase tracking-[0.3em] text-blue-400 mono mb-4 text-center\">// Kata Mereka</div>
+          <h3 class=\"font-display text-3xl md:text-4xl text-white text-center mb-10\">Klien yang <span class=\"text-gradient-blue\">senang</span>.</h3>
+          <div id=\"testimonialsGrid\" class=\"grid md:grid-cols-3 gap-5\"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= CONTACT ============= -->
+    <section id=\"contact\" class=\"relative py-20 md:py-28\">
+      <div class=\"absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent\"></div>
+      <div class=\"section-container\">
+        <div class=\"grid md:grid-cols-2 gap-10\">
+          <div>
+            <div class=\"text-xs uppercase tracking-[0.3em] text-blue-400 mono mb-4\">// Kontak</div>
+            <h2 class=\"font-display text-4xl md:text-5xl font-semibold text-white leading-tight\">Punya ide?<br /><span class=\"text-gradient-blue\">Mari ngobrol.</span></h2>
+            <p class=\"mt-5 text-slate-300 max-w-md leading-relaxed\">Mau bikin bot WhatsApp, toko online, atau butuh yang bantu benerin kode? Drop pesan atau langsung sapa gue di salah satu channel di bawah.</p>
+
+            <div class=\"mt-8 space-y-3\" id=\"socialsList\"></div>
+          </div>
+
+          <div class=\"glass-strong rounded-2xl p-6 md:p-8\">
+            <h3 class=\"font-display text-2xl text-white mb-1\">Kirim Pesan</h3>
+            <p class=\"text-sm text-slate-400 mb-6\">Formulir akan mengarahkan langsung ke WhatsApp gue.</p>
+            <form id=\"contactForm\" class=\"space-y-4\">
+              <div><label class=\"text-xs uppercase tracking-wider text-slate-400\">Nama</label><input id=\"fName\" class=\"inp mt-1.5\" placeholder=\"Nama kamu\" /></div>
+              <div><label class=\"text-xs uppercase tracking-wider text-slate-400\">Email (opsional)</label><input id=\"fEmail\" type=\"email\" class=\"inp mt-1.5\" placeholder=\"kamu@email.com\" /></div>
+              <div><label class=\"text-xs uppercase tracking-wider text-slate-400\">Pesan</label><textarea id=\"fMsg\" rows=\"5\" class=\"inp mt-1.5 resize-none\" placeholder=\"Ceritakan proyek atau kebutuhan kamu...\"></textarea></div>
+              <button type=\"submit\" class=\"w-full h-11 bg-blue-600 hover:bg-blue-500 text-white rounded-xl inline-flex items-center justify-center gap-2 transition-colors group\">
+                Kirim ke WhatsApp
+                <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"group-hover:translate-x-0.5 transition-transform\"><line x1=\"22\" y1=\"2\" x2=\"11\" y2=\"13\"/><polygon points=\"22 2 15 22 11 13 2 9 22 2\"/></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============= FOOTER ============= -->
+  <footer class=\"relative z-10 border-t border-white/5 mt-10\">
+    <div class=\"section-container py-10\">
+      <div class=\"flex flex-col md:flex-row items-start md:items-center justify-between gap-6\">
+        <div>
+          <div class=\"flex items-center\">
+            <span class=\"font-display text-xl font-semibold text-white\">
+              rakku<span class=\"inline-flex align-middle ml-1 -translate-y-0.5\">
+                <svg class=\"vb-svg\" viewBox=\"0 0 22 22\" width=\"16\" height=\"16\" xmlns=\"http://www.w3.org/2000/svg\">
+                  <defs><linearGradient id=\"vb4\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#1D9BF0\"/><stop offset=\"100%\" stop-color=\"#2563EB\"/></linearGradient></defs>
+                  <path fill=\"url(#vb4)\" d=\"M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44C12.275 1.816 11.647 1.62 11 1.6c-.646.017-1.274.213-1.815.566s-.972.854-1.246 1.44c-.608-.223-1.264-.27-1.898-.14-.633.13-1.216.437-1.687.882-.445.47-.749 1.053-.88 1.687-.13.633-.084 1.29.138 1.897-.587.274-1.086.705-1.44 1.246-.353.54-.55 1.17-.567 1.816.018.647.214 1.276.567 1.817.354.54.853.972 1.44 1.245-.223.608-.27 1.264-.138 1.898.131.634.435 1.218.88 1.687.47.445 1.054.75 1.687.882.634.13 1.29.083 1.898-.14.273.587.704 1.086 1.246 1.44.54.353 1.17.549 1.815.566.647-.017 1.275-.213 1.816-.567.541-.353.972-.852 1.245-1.439.608.223 1.264.27 1.898.14.634-.132 1.217-.437 1.687-.882.445-.47.75-1.053.882-1.687.13-.634.083-1.29-.14-1.898.587-.273 1.086-.704 1.44-1.245.354-.54.55-1.17.567-1.817zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z\"/>
+                </svg>
+              </span>
+            </span>
+          </div>
+          <p class=\"text-xs text-slate-500 mono mt-1\">@kyourakku_</p>
+        </div>
+
+        <div class=\"flex items-center gap-5 text-sm\">
+          <a href=\"https://wa.me/6283830130235\" target=\"_blank\" rel=\"noreferrer\" class=\"text-slate-400 hover:text-white transition-colors\">WhatsApp</a>
+          <a href=\"https://instagram.com/kyourakku_\" target=\"_blank\" rel=\"noreferrer\" class=\"text-slate-400 hover:text-white transition-colors\">Instagram</a>
+          <a href=\"https://tiktok.com/@kyourakku\" target=\"_blank\" rel=\"noreferrer\" class=\"text-slate-400 hover:text-white transition-colors\">TikTok</a>
+          <a href=\"https://whatsapp.com/channel/0029Vb6NSxr002T2ttqzk20R\" target=\"_blank\" rel=\"noreferrer\" class=\"text-slate-400 hover:text-white transition-colors\">Channel</a>
+        </div>
+      </div>
+      <div class=\"mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3\">
+        <p class=\"text-xs text-slate-500\">© <span id=\"yr\"></span> rakku. Dibuat dengan kopi, kode, dan sedikit gabut.</p>
+        <p class=\"text-xs text-slate-600 mono\">built with ♥ by @kyourakku_</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============= MODAL ============= -->
+  <div id=\"modalBackdrop\" class=\"hidden fixed inset-0 z-[60] modal-backdrop items-center justify-center p-4\">
+    <div class=\"modal-panel max-w-2xl w-full bg-[#0b0b14] border border-white/10 rounded-2xl p-6 md:p-8 max-h-[85vh] overflow-y-auto\">
+      <div id=\"modalContent\"></div>
+      <div class=\"mt-6 flex justify-end\">
+        <button id=\"modalClose\" class=\"text-sm text-slate-400 hover:text-white px-4 py-2 rounded-lg border border-white/10 hover:border-white/20 transition-colors\">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= TOAST ============= -->
+  <div id=\"toast\" class=\"toast\"></div>
+</div>
+
+<!-- ============= SCRIPTS ============= -->
+<script>
+  // ====== DATA ======
+  const skills = [
+    { name: \"JavaScript / Node.js\", level: 95 },
+    { name: \"React & Tailwind\", level: 90 },
+    { name: \"WhatsApp Bot (Baileys)\", level: 95 },
+    { name: \"MongoDB & REST API\", level: 85 },
+    { name: \"Automation & Scripting\", level: 92 },
+    { name: \"Debugging & Refactor\", level: 93 },
+  ];
+
+  // Lucide-like inline icons (SVG strings)
+  const ICONS = {
+    bot: '<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"10\" rx=\"2\"/><circle cx=\"12\" cy=\"5\" r=\"2\"/><path d=\"M12 7v4\"/><line x1=\"8\" y1=\"16\" x2=\"8\" y2=\"16\"/><line x1=\"16\" y1=\"16\" x2=\"16\" y2=\"16\"/></svg>',
+    msg: '<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/></svg>',
+    store: '<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 9l1-5h16l1 5\"/><path d=\"M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9\"/><path d=\"M9 21V12h6v9\"/></svg>',
+    bug: '<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"8\" y=\"6\" width=\"8\" height=\"14\" rx=\"4\"/><path d=\"M12 6V3\"/><path d=\"M8 10H4\"/><path d=\"M20 10h-4\"/><path d=\"M8 14H4\"/><path d=\"M20 14h-4\"/><path d=\"M8 18l-3 2\"/><path d=\"M16 18l3 2\"/></svg>',
+    coffee: '<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M17 8h1a4 4 0 0 1 0 8h-1\"/><path d=\"M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z\"/><line x1=\"6\" y1=\"2\" x2=\"6\" y2=\"4\"/><line x1=\"10\" y1=\"2\" x2=\"10\" y2=\"4\"/><line x1=\"14\" y1=\"2\" x2=\"14\" y2=\"4\"/></svg>',
+    heart: '<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z\"/></svg>',
+    arrow: '<svg class=\"arrow-ico\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"7\" y1=\"17\" x2=\"17\" y2=\"7\"/><polyline points=\"7 7 17 7 17 17\"/></svg>',
+    check: '<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#60a5fa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg>',
+    quote: '<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"rgba(96,165,250,0.4)\" stroke=\"none\"><path d=\"M7.17 6A5.17 5.17 0 0 0 2 11.17V18h6v-6H5.17A2.17 2.17 0 0 1 7.34 9.83L8 9.17V6zm9 0A5.17 5.17 0 0 0 11 11.17V18h6v-6h-2.83A2.17 2.17 0 0 1 16.34 9.83L17 9.17V6z\"/></svg>',
+    wa: '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#34d399\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z\"/></svg>',
+    ig: '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#f472b6\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" rx=\"5\"/><path d=\"M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z\"/><line x1=\"17.5\" y1=\"6.5\" x2=\"17.51\" y2=\"6.5\"/></svg>',
+    tt: '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#e2e8f0\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg>',
+    radio: '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#60a5fa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"2\"/><path d=\"M16.24 7.76a6 6 0 0 1 0 8.49\"/><path d=\"M7.76 16.24a6 6 0 0 1 0-8.48\"/><path d=\"M19.07 4.93a10 10 0 0 1 0 14.14\"/><path d=\"M4.93 19.07a10 10 0 0 1 0-14.14\"/></svg>',
+    copy: '<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg>',
+    check2: '<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg>',
+  };
+
+  const projects = [
+    {
+      id: \"wa-bot\",
+      title: \"WhatsApp Bot Multi-Fitur\",
+      category: \"Automation\",
+      icon: \"bot\",
+      accent: \"from-sky-500/30 to-blue-600/10\",
+      short: \"Bot WhatsApp canggih dengan ratusan perintah, auto-reply cerdas, dan integrasi database real-time.\",
+      long: \"Proyek bot WhatsApp yang gue bangun dari nol pakai Node.js dan library Baileys. Bot ini nggak cuma bisa balas pesan — dia bisa manage grup secara otomatis, download video & audio dari berbagai platform, generate sticker, bahkan terintegrasi ke AI buat ngobrol natural. Semua command dibungkus dalam handler modular, jadi gampang ditambahin fitur baru tanpa ngacak struktur lama. Ada juga anti-spam, rate-limit, dan sistem premium user untuk fitur eksklusif. Bot ini udah dipakai di komunitas dengan ribuan user aktif, dengan uptime 99% dan response time di bawah 1 detik.\",
+      tech: [\"Node.js\", \"Baileys\", \"MongoDB\", \"PM2\", \"REST API\"],
+      highlights: [\"200+ command siap pakai\", \"Handler modular & scalable\", \"Sistem premium & anti-spam\", \"Deploy 24/7 via VPS\"],
+    },
+    {
+      id: \"auto-msg\",
+      title: \"Pesan Otomatis / Auto-Reply\",
+      category: \"Automation\",
+      icon: \"msg\",
+      accent: \"from-indigo-500/30 to-sky-500/10\",
+      short: \"Sistem auto-reply pintar untuk bisnis: balas customer otomatis berdasar kata kunci, jam, dan konteks.\",
+      long: \"Buat kamu yang jualan online tapi nggak sempat bales chat satu-satu, sistem pesan otomatis ini jawabannya. Gue bikin engine pencocok kata kunci dengan skoring kemiripan, jadi customer yang nanya \\"ready ga kak?\\" dan \\"masih ada stoknya?\\" tetap dapet jawaban yang benar. Tersedia scheduler buat broadcast promo tepat waktu, mode sibuk otomatis di luar jam kerja, template multi-bahasa, dan laporan harian tentang pesan masuk. Admin bisa atur semua dari dashboard web sederhana tanpa perlu ngulik kode.\",
+      tech: [\"Node.js\", \"Express\", \"Cron\", \"Redis\", \"Dashboard React\"],
+      highlights: [\"Keyword matching + fuzzy search\", \"Broadcast terjadwal\", \"Laporan analitik harian\", \"Dashboard admin clean UI\"],
+    },
+    {
+      id: \"web-store\",
+      title: \"Website Store Modern\",
+      category: \"Web Development\",
+      icon: \"store\",
+      accent: \"from-cyan-500/30 to-blue-500/10\",
+      short: \"Toko online full-stack yang cepat, responsif, dan siap jualan — lengkap dengan payment & admin panel.\",
+      long: \"Website store yang gue bangun bukan sekadar katalog produk, tapi toko beneran yang siap tempur. Frontend-nya pakai React + Tailwind dengan animasi halus dan loading yang cepat, backend-nya Node.js + MongoDB untuk handle ribuan produk. Fitur unggulannya: cart persisten, checkout satu halaman, integrasi payment gateway (QRIS / transfer), invoice otomatis via WhatsApp, search real-time, filter by kategori & harga, review produk, serta admin panel untuk kelola stok dan pesanan. Sudah SEO-friendly dan dioptimasi mobile-first.\",
+      tech: [\"React\", \"Tailwind\", \"Node.js\", \"MongoDB\", \"Midtrans\"],
+      highlights: [\"Lighthouse score 95+\", \"Payment gateway terintegrasi\", \"Admin panel lengkap\", \"Mobile-first & SEO ready\"],
+    },
+    {
+      id: \"fix-js\",
+      title: \"Fix JavaScript & Debugging\",
+      category: \"Service\",
+      icon: \"bug\",
+      accent: \"from-blue-500/30 to-indigo-500/10\",
+      short: \"Jasa perbaikan & optimasi kode JavaScript — dari error kecil sampai refactor total.\",
+      long: \"Kadang kode yang kamu download dari GitHub itu kayak mantan: kelihatan cakep, tapi begitu dipake langsung drama. Di sinilah gue masuk. Gue bantu benerin error JavaScript / Node.js, bug yang aneh, memory leak, async hell, sampai refactor struktur biar bisa di-maintain jangka panjang. Bukan cuma numpang tambal — gue kasih tau akar masalahnya, cara hindarin di masa depan, dan kalau perlu bikin unit test biar nggak kambuh. Udah bantu puluhan developer & pemilik bot yang frustrasi sampai mau banting laptop.\",
+      tech: [\"JavaScript\", \"Node.js\", \"ESLint\", \"Jest\", \"Git\"],
+      highlights: [\"Root-cause analysis\", \"Refactor clean & readable\", \"Optimasi performa & memory\", \"Dokumentasi hasil fix\"],
+    },
+    {
+      id: \"gabut\",
+      title: \"Gabut Suka Ngmong Sendiri\",
+      category: \"Personal\",
+      icon: \"coffee\",
+      accent: \"from-slate-500/30 to-blue-500/10\",
+      short: \"Proyek random ketika gabut menyerang: narasi absurd, ide-ide liar, dan monolog developer.\",
+      long: \"Ini adalah sisi manusia dari seorang coder. Ketika semua client udah tidur dan terminal cuma nampilin cursor yang kedip, gue sering ngmong sendiri — tentang kenapa semicolon itu bikin emosi, kenapa bug cuma muncul pas demo, atau apakah AI bakal pernah ngerti humor gue. Di proyek ini, gue kumpulin catatan-catatan absurd, quotes, dan monolog yang ditulis tengah malem. Bukan buat dipamerin, tapi buat ngingetin bahwa di balik setiap baris kode, ada manusia yang… ya gitu deh. Gabut.\",
+      tech: [\"Markdown\", \"Notion\", \"Caffeine\", \"Random Thoughts\"],
+      highlights: [\"Kumpulan monolog developer\", \"Quotes absurd & relatable\", \"Diupdate saat insomnia\", \"Gratis dibaca kapan aja\"],
+    },
+    {
+      id: \"wowo\",
+      title: \"Mikirin Wowo Imut\",
+      category: \"Personal\",
+      icon: \"heart\",
+      accent: \"from-pink-500/20 to-sky-500/10\",
+      short: \"Proyek paling penting: mikirin wowo yang imut — fokus utama selain ngoding.\",
+      long: \"Ini bukan proyek teknis, tapi proyek paling serius yang pernah gue kerjain. Setiap kali build gagal, setiap kali deploy molor, setiap kali bug muncul jam 3 pagi — yang bikin gue tetep waras cuma satu: mikirin wowo yang imut. Proyek ini nggak punya repo, nggak punya deadline, nggak butuh server. Cuma butuh hati yang tenang dan sedikit kopi. Kalau kamu nanya kenapa masuk portfolio? Karena tanpa ini, semua proyek lain di atas mungkin nggak akan pernah selesai.\",
+      tech: [\"Hati\", \"Waktu\", \"Kopi\", \"Senyum\"],
+      highlights: [\"Prioritas nomor satu\", \"Running 24/7 di pikiran\", \"Zero bug, full feeling\", \"Uptime: selamanya\"],
+    },
+  ];
+
+  const testimonials = [
+    { name: \"Andre P.\", role: \"Owner Toko Online\", text: \"Bot-nya bener-bener bantu banget. Customer dibales otomatis, gue tinggal packing aja. Profesional parah.\" },
+    { name: \"Rizki M.\", role: \"Developer\", text: \"Minta fix JS yang udah buntu seminggu, dia kelar 2 jam. Dikasih penjelasan lagi. Worth it banget.\" },
+    { name: \"Nadia A.\", role: \"UMKM Owner\", text: \"Website store-nya cakep, cepet, dan admin panel-nya gampang dipake. Omset naik 2x lipat.\" },
+  ];
+
+  const socials = [
+    { key: \"whatsapp\", label: \"WhatsApp\", value: \"+62 838-3013-0235\", href: \"https://wa.me/6283830130235\", icon: \"wa\" },
+    { key: \"instagram\", label: \"Instagram\", value: \"@kyourakku_\", href: \"https://instagram.com/kyourakku_\", icon: \"ig\" },
+    { key: \"tiktok\", label: \"TikTok\", value: \"@kyourakku\", href: \"https://tiktok.com/@kyourakku\", icon: \"tt\" },
+    { key: \"channel\", label: \"WA Channel\", value: \"Saluran Resmi rakku\", href: \"https://whatsapp.com/channel/0029Vb6NSxr002T2ttqzk20R\", icon: \"radio\" },
+  ];
+
+  // ====== RENDER ======
+  // Year
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Skills
+  const skillsEl = document.getElementById('skillsBars');
+  skills.forEach(s => {
+    const row = document.createElement('div');
+    row.innerHTML = `
+      <div class=\"flex items-center justify-between mb-2\">
+        <span class=\"text-sm text-slate-200\">${s.name}</span>
+        <span class=\"text-xs mono text-blue-300\">${s.level}%</span>
+      </div>
+      <div class=\"h-1.5 bg-white/5 rounded-full overflow-hidden\">
+        <div class=\"h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full\" style=\"width:${s.level}%\"></div>
+      </div>`;
+    skillsEl.appendChild(row);
+  });
+
+  // Projects
+  const pGrid = document.getElementById('projectGrid');
+  projects.forEach((p, i) => {
+    const btn = document.createElement('button');
+    btn.className = \"project-card text-left glass rounded-2xl p-6\";
+    btn.style.animationDelay = `${i*60}ms`;
+    btn.innerHTML = `
+      <div class=\"accent-glow absolute -top-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-br ${p.accent} blur-3xl pointer-events-none\"></div>
+      <div class=\"relative flex items-start justify-between\">
+        <div class=\"w-11 h-11 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-300\">${ICONS[p.icon]}</div>
+        ${ICONS.arrow}
+      </div>
+      <div class=\"relative mt-5\">
+        <span class=\"inline-block bg-white/5 text-slate-300 border border-white/10 text-[10px] mono tracking-wider px-2 py-0.5 rounded\">${p.category}</span>
+        <h3 class=\"mt-3 font-display text-xl font-semibold text-white leading-snug\">${p.title}</h3>
+        <p class=\"mt-2 text-sm text-slate-400 leading-relaxed line-clamp-3\">${p.short}</p>
+      </div>
+      <div class=\"relative mt-5 flex flex-wrap gap-1.5\">
+        ${p.tech.slice(0,4).map(t => `<span class=\"mono text-[10px] px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-300\">${t}</span>`).join('')}
+      </div>`;
+    btn.addEventListener('click', () => openModal(p));
+    pGrid.appendChild(btn);
+  });
+
+  // Testimonials
+  const tGrid = document.getElementById('testimonialsGrid');
+  testimonials.forEach(t => {
+    const card = document.createElement('div');
+    card.className = \"glass rounded-2xl p-6 relative\";
+    card.innerHTML = `
+      <div class=\"absolute top-5 right-5\">${ICONS.quote}</div>
+      <p class=\"text-slate-200 leading-relaxed\">“${t.text}”</p>
+      <div class=\"mt-5 flex items-center gap-3\">
+        <div class=\"w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-sm font-semibold text-white\">${t.name.charAt(0)}</div>
+        <div><div class=\"text-sm text-white font-medium\">${t.name}</div><div class=\"text-xs text-slate-400\">${t.role}</div></div>
+      </div>`;
+    tGrid.appendChild(card);
+  });
+
+  // Socials
+  const sList = document.getElementById('socialsList');
+  socials.forEach(s => {
+    const row = document.createElement('div');
+    row.className = \"group glass rounded-xl p-4 flex items-center justify-between\";
+    row.innerHTML = `
+      <a href=\"${s.href}\" target=\"_blank\" rel=\"noreferrer\" class=\"flex items-center gap-4 flex-1 min-w-0\">
+        <div class=\"w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0\">${ICONS[s.icon]}</div>
+        <div class=\"min-w-0\">
+          <div class=\"text-[10px] uppercase tracking-wider text-slate-400\">${s.label}</div>
+          <div class=\"text-sm text-white mono truncate\">${s.value}</div>
+        </div>
+      </a>
+      <button data-copy=\"${s.value}\" class=\"copyBtn ml-3 text-slate-400 hover:text-blue-300 p-2\" aria-label=\"Salin\">${ICONS.copy}</button>`;
+    sList.appendChild(row);
+  });
+
+  // Copy buttons
+  document.querySelectorAll('.copyBtn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const val = btn.getAttribute('data-copy');
+      try {
+        await navigator.clipboard.writeText(val);
+        btn.innerHTML = ICONS.check2;
+        showToast('Tersalin ke clipboard');
+        setTimeout(() => { btn.innerHTML = ICONS.copy; }, 1500);
+      } catch { showToast('Gagal menyalin'); }
+    });
+  });
+
+  // Modal
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalContent = document.getElementById('modalContent');
+  const modalClose = document.getElementById('modalClose');
+
+  function openModal(p) {
+    modalContent.innerHTML = `
+      <div class=\"flex items-center gap-3 mb-2\">
+        <div class=\"w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-300\">${ICONS[p.icon]}</div>
+        <span class=\"bg-white/5 text-slate-300 border border-white/10 text-[10px] mono px-2 py-0.5 rounded\">${p.category}</span>
+      </div>
+      <h3 class=\"font-display text-2xl md:text-3xl text-white\">${p.title}</h3>
+      <p class=\"text-slate-300 leading-relaxed pt-3\">${p.long}</p>
+      <div class=\"mt-5\">
+        <div class=\"text-xs uppercase tracking-wider text-blue-300 mono mb-3\">Highlights</div>
+        <ul class=\"grid sm:grid-cols-2 gap-2\">
+          ${p.highlights.map(h => `<li class=\"flex items-start gap-2 text-sm text-slate-200\">${ICONS.check}<span>${h}</span></li>`).join('')}
+        </ul>
+      </div>
+      <div class=\"mt-5\">
+        <div class=\"text-xs uppercase tracking-wider text-blue-300 mono mb-3\">Tech Stack</div>
+        <div class=\"flex flex-wrap gap-1.5\">
+          ${p.tech.map(t => `<span class=\"mono text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-200\">${t}</span>`).join('')}
+        </div>
+      </div>`;
+    modalBackdrop.classList.remove('hidden');
+    modalBackdrop.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modalBackdrop.classList.add('hidden');
+    modalBackdrop.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+  modalClose.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // Contact form -> WhatsApp
+  document.getElementById('contactForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('fName').value.trim();
+    const email = document.getElementById('fEmail').value.trim();
+    const msg = document.getElementById('fMsg').value.trim();
+    if (!name || !msg) { showToast('Nama dan pesan wajib diisi ya'); return; }
+    const text = encodeURIComponent(`Halo rakku!\n\nNama: ${name}\nEmail: ${email || '-'}\n\n${msg}`);
+    window.open(`https://wa.me/6283830130235?text=${text}`, '_blank');
+    showToast('Pesan disiapkan, lanjut di WhatsApp');
+    e.target.reset();
+  });
+
+  // Toast
+  const toastEl = document.getElementById('toast');
+  let toastTimer;
+  function showToast(m) {
+    toastEl.textContent = m;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+  }
+
+  // Navbar scroll effect
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      nav.classList.add('backdrop-blur-xl','bg-[#07070c]/70','border-b','border-white/5');
+      nav.classList.remove('bg-transparent');
+    } else {
+      nav.classList.remove('backdrop-blur-xl','bg-[#07070c]/70','border-b','border-white/5');
+      nav.classList.add('bg-transparent');
+    }
+  });
+
+  // Mobile menu
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+</script>
+</body>
+</html>
